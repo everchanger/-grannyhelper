@@ -1,0 +1,30 @@
+.container-fluid
+{
+	max-width:1500px;
+}
+
+
+.hidden-elm 
+{
+	display: none;
+}
+
+#message_field
+{
+	overflow: hidden;
+}
+
+.preview-upload
+{
+	margin-left: 15px;
+	width:128px;
+}
+
+.form-group > div
+{
+	padding: 0;
+}
+
+img[src="#"] {
+    display: none;
+}
