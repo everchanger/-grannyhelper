@@ -3,7 +3,6 @@
 	max-width:1500px;
 }
 
-
 .hidden-elm 
 {
 	display: none;
@@ -14,10 +13,28 @@
 	overflow: hidden;
 }
 
+.clickable 
+{
+    background: rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    cursor: pointer;
+}
+
+#close-message-btn
+{
+	 color: inherit; 
+	 display: inline-block;
+} 
+
 .preview-upload
 {
-	margin-left: 15px;
+	margin-left: 35px;
 	width:128px;
+	border: 1px solid #a7a7a7;
+	box-shadow: 2px 2px 5px #717171;
+	background-color: #FFF; 
+	padding: 3px;
+	border-radius: 5px;
 }
 
 .form-group > div
@@ -27,4 +44,76 @@
 
 img[src="#"] {
     display: none;
+}
+
+textarea {
+    resize: none;
+}
+
+.form-group 
+{ 
+	border: 1px solid #E5E5E5;
+	background-color: #F2F2F2; 
+	box-shadow: 2px 2px 5px #dcdcdc;
+	padding: 10px 10px;
+	border-radius: 5px;
+}
+
+/*.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}*/
+
+@media only screen and (min-width : 320px) {
+	.preview-upload
+	{
+		margin-left: 10px;
+		width:128px;
+	}
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+	.preview-upload
+	{
+		margin-left: 35px;
+		width:128px;
+	}
+}
+
+.navbar
+{
+	margin-bottom: 0px;
+}
+
+#overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+#text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+
+/* Display specific css*/
+
+#display-img
+{
+	width: 100%;
 }

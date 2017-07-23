@@ -32,7 +32,7 @@ class Base
 		{
 			$query .= "&" . http_build_query($parameters);
 		}
-		$request = "?controller=" . $controller . "&action=" . $action . "&" . $query;
+		$request = "?controller=" . $controller . "&action=" . $action . $query;
 		
 		$this->redirect($request);
 	}
@@ -43,7 +43,7 @@ class Base
 		$user_message->type 	= $message_type;
 		$user_message->message 	= $message;
 
-		return array("message_to_user" => $user_message);
+		$_SESSION['message_to_user'] = $user_message;
 	}
 };
 

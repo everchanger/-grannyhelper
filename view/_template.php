@@ -16,13 +16,7 @@
 		  <div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
-			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			  </button>
-			  <a class="navbar-brand" href="#">Granny Display </a>
+			  <a class="navbar-brand" href="?controller=home">Granny Display </a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -39,9 +33,9 @@
 		<!-- Message handling -->
 		<?php 
 			$panel_type = "";
-			if(isset($message_to_user)) 
+			if(isset($_SESSION['message_to_user'])) 
 			{
-				switch($message_to_user->type) 
+				switch($_SESSION['message_to_user']->type) 
 				{
 						case USER_MESSAGE_SUCCESS:
 							$panel_type = "panel-success";
@@ -59,9 +53,9 @@
 	<div class="panel no-margin-bottom <?=$panel_type?> hidden-elm" id="message_field">
 			<div class="panel-heading">
 				<div id="user_message">
-				<?=isset($message_to_user) ? $message_to_user->message : '' ?>
+				<?=isset($_SESSION['message_to_user']) ? $_SESSION['message_to_user']->message : '' ?><span id="close-message-btn" class="pull-right glyphicon glyphicon-remove clickable"></span>
 				</div>
-				<span id="close-message-btn" class="pull-right glyphicon glyphicon-remove clickable"></span>
+				
 			</div>
 		</div>
 		
@@ -78,3 +72,13 @@
 		<script type="text/javascript" src="js/messages.js"></script>
 	</body>
 </html>
+
+<?php
+
+	if(isset($_SESSION['message_to_user'])) 
+	{
+		unset($_SESSION['message_to_user']);
+		
+	}
+
+?>

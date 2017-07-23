@@ -10,11 +10,6 @@
 	$control = "home";
 	$action  = "show";
 	
-	if(isset($_SESSION['signed_in_user_id']))
-	{
-		$control = "user";
-	}
-
 	if(array_key_exists("controller", $_GET)) 
 	{
 		$control = $_GET["controller"];
