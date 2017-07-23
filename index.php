@@ -3,6 +3,8 @@
 	include_once('utils/functions.php');
 	include_once('utils/autoloader.php');
 	include_once('model/db.php');
+
+	setlocale(LC_ALL, "sv_SE", "sv_SE.UTF-8", "swedish", "swedish.UTF-8");
 	
 	session_start();
 

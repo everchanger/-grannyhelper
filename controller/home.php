@@ -96,8 +96,7 @@ class home extends Base
 	public function display()
 	{
 		$date = new \DateTime('today midnight');
-		//$date->modify('yesterday');
-
+	
 		try {
 			$event = new \model\Event();
 			$plannedEvents = $event->get($date);
@@ -113,7 +112,7 @@ class home extends Base
 			var_dump($e);die();
 		}
 
-		respondWithView("display", array("date" => $date, "event" => $currentEvent));
+		respondWithView("display", array("date" => $date, "event" => $currentEvent), 200, false);
 	}
 };
 
