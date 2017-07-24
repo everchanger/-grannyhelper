@@ -10,6 +10,20 @@ class home extends Base
 		respondWithView("home", array());
 	}
 
+	public function login()
+	{
+		$password  		= filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+
+		if($password == "hej123") {
+			$_SESSION['logged_in'] = true;
+			$this->userMessage("Välkommen!", USER_MESSAGE_SUCCESS);
+		} else {
+			$this->userMessage("Fel lösenord!", USER_MESSAGE_ERROR);
+		}
+
+		$this->respondWithController("home", "show");
+	}
+
 	public function updateSettings() 
 	{
 		$in_date  		= filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
@@ -34,7 +48,7 @@ class home extends Base
 
 				// Store file on the server before we add references in the db to it.
 				$target_dir 	= UPLOAD_PATH;
-				$newFileName 	= uniqid();
+				$newFileName 	= hash_file('sha256', $_FILES['photo']['tmp_name']);
 				$filename 		= $target_dir . $newFileName;
 				$fileSize 		= $_FILES['photo']['size'];
 
