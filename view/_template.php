@@ -16,12 +16,25 @@
 		  <div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
-			  <a class="navbar-brand" href="?controller=home">Granny Display </a>
+				<?php if(array_key_exists('logged_in', $_SESSION)): ?>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<?php endif; ?>
+			  <a class="navbar-brand" href="?controller=home">Granny Display</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			  <ul class="nav navbar-nav">
+			  	<?php if(array_key_exists('logged_in', $_SESSION)): ?>
+				<li>
+				  	<a href="?controller=home&action=display">Visa skärm</a>
+				</li>
+				<?php endif; ?>
 			  </ul>			
 
 			  <ul class="nav navbar-nav navbar-right">
