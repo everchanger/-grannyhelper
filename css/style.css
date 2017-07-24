@@ -121,10 +121,11 @@ textarea {
 #display-body {
 	display: grid;
 	grid-gap: 10px;
-	grid-template-columns: 0.60fr 0.40fr;
+	grid-template-columns: 0.4fr 0.2fr 0.4fr;
 	background-color: #eee;
-	grid-template-areas: "date date"
-						"desc img"; 
+	grid-template-areas: "date date date"
+						"desc . img" 
+						". . img"; 
 	margin: 20px;
 }
 
@@ -148,6 +149,7 @@ textarea {
 #display-img-wrapper
 {
 	grid-area: img;
+	height: 800px;
 }
 
 #display-title, #display-date
@@ -165,13 +167,17 @@ textarea {
 }
 
 #display-img
-{
+{	
 	border: 2px solid #D0D0D0;
 	background-color: #FFF;
 	border-radius: 50px;
-	width: 95%;
+	max-height: 95%;
+	max-width: 95%;
+	display: block;
 	padding: 10px;
 	box-shadow: 0px 0px 12px 0px #afafaf;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .display-wrapper
