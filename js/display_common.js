@@ -1,0 +1,18 @@
+$(document).ready(function() {	
+    setInterval(needsUpdate, 600000);
+});
+
+function needsUpdate()
+{
+    // Fetch events for this day!
+    $.ajax({
+        url: '?controller=home&action=needsRefresh',
+        data: {event_hash: $('#event_hash').val()},
+    })
+    .done(function(response) {
+        if(!response.length) {
+            return;
+        }
+        location.reload();
+    });
+}

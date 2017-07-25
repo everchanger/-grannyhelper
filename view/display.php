@@ -2,27 +2,26 @@
 <html>
 	<head>
         <meta charset="UTF-8">
-        <meta http-equiv="refresh" content="30" />
-		<title>Granny Display</title>
+        <title>Granny Display</title>
 		<!-- CSS -->
-		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/display_style.css">
 	</head>
-	<body id="display-body">
+	<body>
+        <div id="display-date-wrapper" class="display-wrapper text-center">
+            <p id="display-date"><?=utf8_encode(ucfirst(strftime("%Aen den %d %B %Y", $date->getTimestamp())));?></p>
+        </div>
 
+        <div id="display-title-wrapper" class="display-wrapper text-center">
+            <p id="display-title"><?=$event->title?></p>
+        </div>
+        <div id="display-description-wrapper" class="display-wrapper alert-border">
+            <p id="display-description"><?=nl2br($event->description)?></p>
+        </div>
+        <div id="display-img-wrapper" style="background-image: url(<?=$event->filename?>)" class="display-wrapper text-center">
+        </div>
+        <input type="hidden" id="event_hash" value="<?=$event_hash?>" />
 
-            <div id="display-date-wrapper" class="display-wrapper text-center">
-                <p id="display-date"><?=utf8_encode(ucfirst(strftime("%Aen den %d %B %Y", $date->getTimestamp())));?></p>
-            </div>
-
-            <div id="display-description-wrapper" class="display-wrapper alert-border">
-                <p id="display-title"><?=$event->title?></p>
-                <p id="display-description"><?=nl2br($event->description)?></p>
-            </div>
-            <div id="display-img-wrapper" class="display-wrapper text-center">
-                <img id="display-img" src="<?=$event->filename?>">
-            </div>
-
-            <!-- JAVASCRIPT -->
-        <script type="text/javascript" src="js/common.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="js/display_common.js"></script>
 	</body>
 </html>

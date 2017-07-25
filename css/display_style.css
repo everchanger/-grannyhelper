@@ -1,0 +1,105 @@
+/* Display specific css*/
+
+.alert-border
+{
+	border: 15px solid #ff5151 !important;
+}
+
+.alert-sm-border
+{
+	border: 2px solid red !important;
+}
+
+body {
+	display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+	background-color: #eee;
+    grid-template-areas: "title title title . . date date date ."
+                         "desc desc desc desc desc img img img img"
+                         "desc desc desc desc desc img img img img"
+                         "desc desc desc desc desc img img img img"
+                         "desc desc desc desc desc img img img img"
+                         "desc desc desc desc desc img img img img"
+                         "desc desc desc desc desc . . . ."
+                         ;
+    margin: 160px;
+    height: 900px;
+
+    background: #BFB5AC; /* For browsers that do not support gradients */
+    /* For Safari 5.1 to 6.0 */
+    background: -webkit-linear-gradient(left,#BFB5AC,#D7C9BC,#E4DBCC,#DAD6D3, #A0B0C0); 
+    /* For Opera 11.1 to 12.0 */
+    background: -o-linear-gradient(left,#BFB5AC,#D7C9BC,#E4DBCC,#DAD6D3, #A0B0C0); 
+    /* For Fx 3.6 to 15 */
+    background: -moz-linear-gradient(left,#BFB5AC,#D7C9BC,#E4DBCC,#DAD6D3, #A0B0C0); 
+    /* Standard syntax */
+    background: linear-gradient(to right,#BFB5AC,#D7C9BC,#E4DBCC,#DAD6D3, #A0B0C0); 
+
+}
+
+#display-title-wrapper 
+{
+	grid-area: title;
+	background-color: #f4e9ff;
+	border: 15px solid #d2b3ef;
+}
+
+#display-date-wrapper 
+{
+	text-align: center;
+	grid-area: date;
+	background-color: #ecfcff;
+	border: 15px solid #c9f5ff;
+}
+
+#display-description-wrapper 
+{
+	  grid-area: desc;
+	  
+}
+
+#display-img-wrapper
+{
+	grid-area: img;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position:center;
+	background-color: #fff1e0;
+	border: 15px solid #ffc884;
+}
+
+#display-title, #display-date
+{
+	font-size: 2em;
+	margin: 0;
+	text-align: center;
+}
+
+#display-date
+{
+	font-weight: bold;
+	color: #006b84;
+}
+
+#display-title
+{
+	font-weight: bold;
+	color: #6200bd;
+}
+
+#display-description
+{
+	font-size: 1.5em;
+	margin: 10px;
+	line-height: 1.5em;
+	background-color: #ffe8e8;
+}
+
+.display-wrapper
+{
+	font-family: arial;
+	background-color: #ffe8e8;
+	padding: 20px;
+	box-shadow: 5px 5px 20px #929292;
+}

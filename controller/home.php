@@ -121,12 +121,47 @@ class home extends Base
 					break;
 				}
 			}
+
+			$event_hash = $this->hashObject($currentEvent);
 		}
 		catch(\Exception $e) {
 			var_dump($e);die();
 		}
 
-		respondWithView("display", array("date" => $date, "event" => $currentEvent), 200, false);
+		respondWithView("display", array("date" => $date, "event" => $currentEvent, "event_hash" => $event_hash), 200, false);
+	}
+
+	public function needsRefresh()
+	{
+		$hash = filter_input(INPUT_GET, 'event_hash', FILTER_SANITIZE_STRING);
+
+		$date = new \DateTime('today midnight');
+	
+		try {
+			$event = new \model\Event();
+			$plannedEvents = $event->get($date);
+			$currentEvent = $plannedEvents[0];
+			foreach($plannedEvents as $plannedEvent) {
+				if(!$plannedEvent->standard) {
+					$currentEvent = $plannedEvent;
+					break;
+				}
+			}
+
+			$event_hash = $this->hashObject($currentEvent);
+		}
+		catch(\Exception $e) {
+			var_dump($e);die();
+		}
+
+		if($hash != $event_hash) {
+			echo 'TRUE';
+		}
+	}
+
+	private function hashObject($object) {
+		$text = $object->title . $object->description . $object->filename;
+		return hash('md5', $text);
 	}
 };
 
