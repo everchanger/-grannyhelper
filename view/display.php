@@ -8,7 +8,7 @@
 	</head>
 	<body>
         <div id="display-date-wrapper" class="display-wrapper text-center">
-            <p id="display-date"><?=utf8_encode(ucfirst(strftime("%Aen den %d %B %Y", $date->getTimestamp())));?></p>
+            <p id="display-date"><?=utf8_encode(ucfirst(strftime("%A %d %B %Y", $date->getTimestamp())));?></p>
         </div>
 
         <div id="display-title-wrapper" class="display-wrapper text-center">
