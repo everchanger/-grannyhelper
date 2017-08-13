@@ -36,6 +36,10 @@ class home extends Base
 		$havePhoto = false;
 		$filename = null;
 
+		if($title == null || $title == "") {
+			$title = "nothing";
+		}
+
 		// Check if file uploads went OK
 		if(array_key_exists('photo', $_FILES)) {
 			if($_FILES['photo']['error'] && $_FILES['photo']['error'] != UPLOAD_ERR_NO_FILE) 
@@ -53,6 +57,8 @@ class home extends Base
 				$fileSize 		= $_FILES['photo']['size'];
 
 				move_uploaded_file($_FILES['photo']['tmp_name'], $filename);
+
+				$this->rotateImageExif($filename);
 			}
 		}
 
@@ -128,7 +134,7 @@ class home extends Base
 			var_dump($e);die();
 		}
 
-		respondWithView("display", array("date" => $date, "event" => $currentEvent, "event_hash" => $event_hash), 200, false);
+		respondWithView("display", array("date" => $date, "event" => $currentEvent, "day_period" => $this->getTimePeriod(), "event_hash" => $event_hash), 200, false);
 	}
 
 	public function needsRefresh()
@@ -159,8 +165,53 @@ class home extends Base
 		}
 	}
 
+	private function rotateImageExif($filename)
+	{
+		$exif = exif_read_data($filename);
+		if (!empty($exif['Orientation'])) {
+			$imageResource = imagecreatefromjpeg($filename); // provided that the image is jpeg. Use relevant function otherwise
+			switch ($exif['Orientation']) {
+				case 3:
+				$image = imagerotate($imageResource, 180, 0);
+				break;
+				case 6:
+				$image = imagerotate($imageResource, -90, 0);
+				break;
+				case 8:
+				$image = imagerotate($imageResource, 90, 0);
+				break;
+				default:
+				$image = $imageResource;
+			} 
+		}
+
+		imagejpeg($image, $filename, 90);
+
+		imagedestroy($imageResource);
+		imagedestroy($image);
+	}
+
+	private function getTimePeriod()
+	{
+		$current_time = new \DateTime();
+		$period = "morgon";
+		$current_hour = intval($current_time->format('H'))+1;
+
+		if($current_hour >= 23 || ($current_hour >= 0 && $current_hour < 3)) {
+			$period = "natt";
+		} else if($current_hour >= 3 && $current_hour < 9) {
+			$period = "morgon";
+		} else if($current_hour >= 9 && $current_hour < 17) {
+			$period = "dag";
+		} else if($current_hour >= 17 && $current_hour < 23) {
+			$period = "kväll";
+		}
+
+		return $period;
+	}
+
 	private function hashObject($object) {
-		$text = $object->title . $object->description . $object->filename;
+		$text = $object->title . $object->description . $object->filename . $this->getTimePeriod();
 		return hash('md5', $text);
 	}
 };

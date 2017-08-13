@@ -22,9 +22,9 @@
 				</label>
 			</div> 
 		</div>
-		<div class="form-group row">
+		<div class="form-group row hidden">
 			<label for="title">Titel</label>
-			<input required type="text" class="form-control" id="title" name="title">
+			<input type="text" class="form-control" id="title" name="title">
 		</div>
 		<div class="form-group row">
 			<label for="description">Beskrivning</label>

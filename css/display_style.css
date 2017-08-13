@@ -13,19 +13,23 @@
 body {
 	display: grid;
     grid-template-columns: repeat(9, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+	grid-template-rows: repeat(12, 1fr);
+	grid-gap: 20px;
 	background-color: #eee;
-    grid-template-areas: "title title title . . date date date ."
+    grid-template-areas: "date date date date date date date date date"
+						 ". . . . . . . . ."
+						 ". . . . . . . . ."
+						 "desc desc desc desc desc . . . ."
+						 "desc desc desc desc desc img img img img"
                          "desc desc desc desc desc img img img img"
+						 "desc desc desc desc desc img img img img"
                          "desc desc desc desc desc img img img img"
-                         "desc desc desc desc desc img img img img"
-                         "desc desc desc desc desc img img img img"
-                         "desc desc desc desc desc img img img img"
-                         "desc desc desc desc desc . . . ."
-                         ;
-    margin: 160px;
-    height: 900px;
-
+						 "desc desc desc desc desc img img img img"
+						 "desc desc desc desc desc . . . ."
+						 ". . . . . . . . ."
+						 ". . . . . . . . .";
+	
+	margin: 40px;
     background: #BFB5AC; /* For browsers that do not support gradients */
     /* For Safari 5.1 to 6.0 */
     background: -webkit-linear-gradient(left,#BFB5AC,#D7C9BC,#E4DBCC,#DAD6D3, #A0B0C0); 
@@ -38,9 +42,12 @@ body {
 
 }
 
+html, body{
+  height: 100%;
+}
+
 #display-title-wrapper 
 {
-	grid-area: title;
 	background-color: #f4e9ff;
 	border: 15px solid #d2b3ef;
 }
@@ -69,17 +76,22 @@ body {
 	border: 15px solid #ffc884;
 }
 
-#display-title, #display-date
+#display-title, #display-date, #display-date-period
 {
 	font-size: 2em;
 	margin: 0;
 	text-align: center;
 }
 
-#display-date
+#display-date, #display-date-period
 {
 	font-weight: bold;
 	color: #006b84;
+}
+
+#display-date-period
+{
+	margin-top: 10px;
 }
 
 #display-title
@@ -90,10 +102,11 @@ body {
 
 #display-description
 {
-	font-size: 1.5em;
+	font-size: 2.5em;
 	margin: 10px;
 	line-height: 1.5em;
 	background-color: #ffe8e8;
+	font-weight: bold;
 }
 
 .display-wrapper
