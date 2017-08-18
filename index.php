@@ -21,6 +21,14 @@
 	{
 		$action = $_GET["action"];
 	}
-		
+
+	if(!isAuthenticated()) {
+		if(($control == 'user' && $action == 'register') || ($control == 'user' && $action == 'login') || ($control == 'home' && $action == 'show_register')) {
+		} else {
+			$control = 'home';
+			$action = 'show_unauth';
+		}
+	}
+	
 	loadController($control, $action);
 ?>

@@ -14,6 +14,12 @@ class Base
 		respondWithStatus($errorText, $errorCode);
 	}
 
+	protected function respondWithViewError($view, $errorText)
+	{
+		$this->userMessage($errorText, USER_MESSAGE_ERROR);
+		respondWithView($view, array());
+	}
+
 	protected function respond($view, $args) 
 	{	
 		respondWithView($view, $args);

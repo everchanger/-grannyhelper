@@ -1,5 +1,60 @@
 <?php
 
+if(!function_exists('hash_equals')) 
+{
+	function hash_equals($str1, $str2) 
+	{
+		if(strlen($str1) != strlen($str2)) 
+		{
+			return false;
+		} 
+		else 
+		{
+			$res = $str1 ^ $str2;
+			$ret = 0;
+			for($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+				return !$ret;
+		}
+	}
+}
+
+function hash_password($password) 
+{
+	// https://alias.io/2010/01/store-passwords-safely-with-php-and-mysql/
+	// A higher "cost" is more secure but consumes more processing power
+	$cost = 10;
+
+	// Create a random salt
+	$salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
+
+	// Prefix information about the hash so PHP knows how to verify it later.
+	// "$2a$" Means we're using the Blowfish algorithm. The following two digits are the cost parameter.
+	$salt = sprintf("$2a$%02d$", $cost) . $salt;
+
+	// Hash the password with the salt
+	$hash = crypt($password, $salt);
+	
+	return $hash;
+}
+
+function validate_password($pwd_hash, $password)
+{
+	// Hashing the password with its hash as the salt returns the same hash
+	$crypt = crypt($password, $pwd_hash);
+	$equals = hash_equals($pwd_hash, $crypt);
+	return $equals;
+}
+
+function isAuthenticated() {
+	return array_key_exists('signed_in_user_id', $_SESSION) && array_key_exists('signed_in_user_email', $_SESSION);
+}
+
+function dd($obj) {
+	echo '<pre>';
+	var_dump($obj);
+	die();
+}
+
 function sendFileToClient($file, $new_filename = NULL) 
 {
 	header('Content-Description: File Transfer');

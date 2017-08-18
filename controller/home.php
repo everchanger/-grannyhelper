@@ -10,18 +10,14 @@ class home extends Base
 		respondWithView("home", array());
 	}
 
-	public function login()
-	{
-		$password  		= filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+	public function show_unauth() 
+	{	
+		respondWithView("unauth_home", array());
+	}
 
-		if($password == "hej123") {
-			$_SESSION['logged_in'] = true;
-			$this->userMessage("Välkommen!", USER_MESSAGE_SUCCESS);
-		} else {
-			$this->userMessage("Fel lösenord!", USER_MESSAGE_ERROR);
-		}
-
-		$this->respondWithController("home", "show");
+	public function show_register() 
+	{	
+		respondWithView("register", array());
 	}
 
 	public function updateSettings() 

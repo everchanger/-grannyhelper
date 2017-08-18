@@ -54,7 +54,7 @@ function showMessageField(message)
             $('#user_message').text(message);
 		    console.log(message);
         }
-		$('#message_field').delay(message_delay).slideUp();
+		//$('#message_field').delay(message_delay).slideUp();
 	});
 }
 
