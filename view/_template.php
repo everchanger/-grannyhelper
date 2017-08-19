@@ -84,13 +84,7 @@
 		
 		<div class="container-fluid" id="content">
 			<!-- INCLUDE THE SELECTED VIEW! -->
-			<?php 
-					if(array_key_exists('logged_in', $_SESSION)) {
-						include $view_file_name;
-					} else {
-						include 'view/logon.php';
-					}
-			?>
+			<?php include $view_file_name; ?>
 		</div>
 
 		<!-- JAVASCRIPT -->

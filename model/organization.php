@@ -37,7 +37,30 @@ class Organization
         return $organizationID;
     }
 
-    // This functions gets a user either from an id or an mail, if the id isn't an int we do email lookup.
+    public function join($organization_id, $user_id) 
+    {
+        if(!isset($organization_id) || !isset($user_id)) 
+        {
+            throw new \Exception("One or more input parameters are not set", ERROR_CODE_INVALID_PARAMETERS);
+        }
+
+        try 
+        {
+            $stmt = DB::pdo()->prepare("INSERT INTO organizations_users (organization_id, user_id) VALUES (:organization_id, :user_id)");
+            
+            $stmt->bindParam(":organization_id", $organization_id);
+            $stmt->bindParam(":user_id", $user_id);
+            $stmt->execute();
+            
+        } 
+        catch (\Exception $e) 
+        {
+            throw $e;
+        }
+
+        return;
+    }
+
     public function get($id) 
     {
         if(!isset($id)) 
@@ -84,8 +107,33 @@ class Organization
         } 
     }
 
-    public function getUsersOrganization($user_id) 
+    public function memberOf($user_id) 
     {
-        // needs to join on both the organizations_users and organizations_administrators tables.
+        try 
+        {
+            $stmt = DB::pdo()->prepare("SELECT organization_id as member_of FROM organizations_users WHERE user_id = :user_id");
+            $stmt->bindParam(":user_id", $user_id);
+            $stmt->execute();
+
+            if ($stmt->rowCount() <= 0){
+                // Check if we're admins
+                
+                $stmt2 = DB::pdo()->prepare("SELECT organization_id as admin_of FROM organizations_admins WHERE user_id = :user_id");
+                $stmt2->bindParam(":user_id", $user_id);
+                $stmt2->execute();
+
+                if ($stmt2->rowCount() <= 0){
+                    null;
+                }
+
+                return $stmt2->fetch(\PDO::FETCH_OBJ);
+            }
+
+            return $stmt->fetch(\PDO::FETCH_OBJ);
+        } 
+        catch (\Exception $e) 
+        {
+            throw $e;
+        } 
     }
 }

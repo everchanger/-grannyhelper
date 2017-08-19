@@ -4,22 +4,46 @@ namespace controller;
 
 class Organization extends Base 
 {
-	
 	public function show() 
 	{	
 		$user_id = $_SESSION['signed_in_user_id'];
-		$isAdministrator = false;
-		$inOrganization = false;
 
 		try {
 			$organization = new \model\Organization();
 			$organizations = $organization->getAll();
-		}
+			$userOrganization = $organization->memberOf($user_id);	
+
+			$display = new \model\Display();
+			$displays = array();
+			
+			if($userOrganization) {
+				$admin = false;
+				if(isset($userOrganization->admin_of)) {
+					$admin = true;
+				}
+
+				$org_id = $admin ? $userOrganization->admin_of : $userOrganization->member_of;
+
+				foreach($organizations as $org)
+				{
+					if($org->id == $org_id) {
+						$userOrganization->id = $org->id;
+						$userOrganization->name = $org->name;
+					}
+				}
+
+				if($admin) {
+					$displays = $display->getOrganizationsAll($org_id);	
+				} else {
+
+				}
+			}
+		}	
 		catch(\Exception $e) {
 			$this->respondWithViewError("organization", $e->getMessage());  
 		}
 
-		respondWithView("organization", array("organizations" => $organizations, "isAdministrator" => $isAdministrator, "inOrganization" => $inOrganization));
+		respondWithView("organization", array("organizations" => $organizations, "userOrganization" => $userOrganization, "displays" => $displays));
 	}
 
 	public function create() 
