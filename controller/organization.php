@@ -15,6 +15,7 @@ class Organization extends Base
 
 			$display = new \model\Display();
 			$displays = array();
+			$members = array();
 			
 			if($userOrganization) {
 				$admin = false;
@@ -33,17 +34,23 @@ class Organization extends Base
 				}
 
 				if($admin) {
-					$displays = $display->getOrganizationsAll($org_id);	
+					$displays = $display->getOrganizationsAll($org_id);
+					$members = $organization->getMembers($org_id);	
+
+					foreach($members as $member) {
+						// Check what displays each member has access too
+						$member->displays =  $display->getUsersAll($member->id);
+					}
 				} else {
 
 				}
 			}
 		}	
 		catch(\Exception $e) {
-			$this->respondWithViewError("organization", $e->getMessage());  
+			$this->respondWithControllerError("organization", $e->getMessage());  
 		}
 
-		respondWithView("organization", array("organizations" => $organizations, "userOrganization" => $userOrganization, "displays" => $displays));
+		respondWithView("organization", array("organizations" => $organizations, "userOrganization" => $userOrganization, "displays" => $displays, "members" => $members));
 	}
 
 	public function create() 
@@ -56,7 +63,7 @@ class Organization extends Base
 			$joined = $organization->add($organization_name, $user_id);
 		}
 		catch(\Exception $e) {
-			$this->respondWithViewError("organization", $e->getMessage());  
+			$this->respondWithControllerError("organization", $e->getMessage());  
 		}
 
 		$this->userMessage("Successfully created an organization", USER_MESSAGE_SUCCESS);
@@ -74,7 +81,7 @@ class Organization extends Base
 			$joined = $organization->join($organization_id, $user_id);
 		}
 		catch(\Exception $e) {
-			$this->respondWithViewError("organization", $e->getMessage());  
+			$this->respondWithControllerError("organization", $e->getMessage());  
 		}
 
 		$this->userMessage("Successfully joined an organization", USER_MESSAGE_SUCCESS);
@@ -82,25 +89,37 @@ class Organization extends Base
 		$this->respondWithController("organization");
 	}
 
-	public function setAdministrator() 
+	public function addAdmin() 
 	{
-		$organization_id = filter_input(INPUT_POST, 'organization_id', FILTER_SANITIZE_STRING);
-		$user_id = filter_input(INPUT_POST, 'user_id', FILTER_SANITIZE_STRING);
-		$isAdministrator = false;
-
-		if(array_key_exists('is_administrator')) {
-			$isAdministrator = true;
-		}
+		$organization_id = filter_input(INPUT_GET, 'organization_id', FILTER_SANITIZE_STRING);
+		$user_id = filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_STRING);
 		
 		try {
 			$organization = new \model\Organization();
-			$joined = $organization->setIsAdministrator($organization_id, $user_id, $isAdministrator);
+			$organization->setIsAdministrator($organization_id, $user_id, true);
 		}
 		catch(\Exception $e) {
-			$this->respondWithViewError("organization", $e->getMessage());  
+			$this->respondWithControllerError("organization", $e->getMessage());  
 		}
 
-		$this->userMessage("Administration settings updated", USER_MESSAGE_SUCCESS);
+		$this->userMessage("Added an administrator", USER_MESSAGE_SUCCESS);
+
+		$this->respondWithController("organization");
+	}
+
+	public function removeAdmin() {
+		$organization_id = filter_input(INPUT_GET, 'organization_id', FILTER_SANITIZE_STRING);
+		$user_id = filter_input(INPUT_GET, 'user_id', FILTER_SANITIZE_STRING);
+
+		try {
+			$organization = new \model\Organization();
+			$organization->setIsAdministrator($organization_id, $user_id, false);
+		}
+		catch(\Exception $e) {
+			$this->respondWithControllerError("organization", $e->getMessage());  
+		}
+
+		$this->userMessage("Removed an administrator", USER_MESSAGE_SUCCESS);
 
 		$this->respondWithController("organization");
 	}

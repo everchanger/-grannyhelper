@@ -14,10 +14,10 @@ class Base
 		respondWithStatus($errorText, $errorCode);
 	}
 
-	protected function respondWithViewError($view, $errorText)
+	protected function respondWithControllerError($view, $errorText)
 	{
 		$this->userMessage($errorText, USER_MESSAGE_ERROR);
-		respondWithView($view, array());
+		$this->respondWithController("organization");
 	}
 
 	protected function respond($view, $args) 

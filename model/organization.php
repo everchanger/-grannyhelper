@@ -107,6 +107,42 @@ class Organization
         } 
     }
 
+    public function getMembers($organization_id) 
+    {
+        try 
+        {
+            $members = array();
+
+            // Fetch administrators 
+            $stmt = DB::pdo()->prepare("SELECT users.id, users.email FROM users JOIN organizations_admins ON organizations_admins.user_id = users.id WHERE organization_id = :organization_id");
+            $stmt->bindParam(":organization_id", $organization_id);
+            $stmt->execute();
+
+            if ($stmt->rowCount() > 0){
+                $members = $stmt->fetchAll(\PDO::FETCH_OBJ);
+            }
+
+            foreach($members as $member) {
+                $member->isAdmin = true;
+            }
+
+            // Fetch ordinary users 
+            $stmt2 = DB::pdo()->prepare("SELECT users.id, users.email FROM users JOIN organizations_users ON organizations_users.user_id = users.id WHERE organization_id = :organization_id");
+            $stmt2->bindParam(":organization_id", $organization_id);
+            $stmt2->execute();
+
+            if ($stmt2->rowCount() > 0){
+                $members = array_merge($members, $stmt2->fetchAll(\PDO::FETCH_OBJ));
+            }
+
+            return $members;
+        } 
+        catch (\Exception $e) 
+        {
+            throw $e;
+        } 
+    }
+
     public function memberOf($user_id) 
     {
         try 
@@ -135,5 +171,39 @@ class Organization
         {
             throw $e;
         } 
+    }
+
+    public function setIsAdministrator($organization_id, $user_id, $admin) 
+    {
+        if(!isset($organization_id) || !isset($user_id)) 
+        {
+            throw new \Exception("One or more input parameters are not set", ERROR_CODE_INVALID_PARAMETERS);
+        }
+
+        try 
+        {
+            $stmt = null;
+            $stmt2 = null;
+
+            if($admin) {
+                $stmt = DB::pdo()->prepare("DELETE FROM organizations_users WHERE user_id = :user_id AND organization_id = :organization_id");
+                $stmt2 = DB::pdo()->prepare("INSERT INTO organizations_admins (organization_id, user_id) VALUES (:organization_id, :user_id)");
+            } else {
+                $stmt = DB::pdo()->prepare("DELETE FROM organizations_admins WHERE user_id = :user_id AND organization_id = :organization_id");
+                $stmt2 = DB::pdo()->prepare("INSERT INTO organizations_users (organization_id, user_id) VALUES (:organization_id, :user_id)");
+            }
+            
+            $stmt->bindParam(":organization_id", $organization_id);
+            $stmt->bindParam(":user_id", $user_id);
+            $stmt2->bindParam(":organization_id", $organization_id);
+            $stmt2->bindParam(":user_id", $user_id);
+           
+            $stmt->execute();
+            $stmt2->execute();
+        } 
+        catch (\Exception $e) 
+        {
+            throw $e;
+        }      
     }
 }

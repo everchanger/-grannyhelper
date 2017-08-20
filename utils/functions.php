@@ -49,10 +49,12 @@ function isAuthenticated() {
 	return array_key_exists('signed_in_user_id', $_SESSION) && array_key_exists('signed_in_user_email', $_SESSION);
 }
 
-function dd($obj) {
+function dd($obj, $die = true) {
 	echo '<pre>';
 	var_dump($obj);
-	die();
+	if($die) {
+		die();
+	}
 }
 
 function sendFileToClient($file, $new_filename = NULL) 

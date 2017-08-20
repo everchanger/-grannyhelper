@@ -63,6 +63,47 @@ class Display
         } 
     }
 
+    public function addUser($display_id, $user_id) {
+        if(!isset($display_id) || !isset($user_id)) 
+        {
+            throw new \Exception("One or more input parameters are not set", ERROR_CODE_INVALID_PARAMETERS);
+        }
+
+        try 
+        {
+            $stmt = DB::pdo()->prepare("INSERT INTO users_displays (display_id, user_id) VALUES (:display_id, :user_id)");
+            $stmt->bindParam(":display_id", $display_id);
+            $stmt->bindParam(":user_id", $user_id);
+            
+
+            $stmt->execute();
+        } 
+        catch (\Exception $e) 
+        {
+            throw $e;
+        }
+    }
+
+    public function removeUser($display_id, $user_id) {
+        if(!isset($display_id) || !isset($user_id)) 
+        {
+            throw new \Exception("One or more input parameters are not set", ERROR_CODE_INVALID_PARAMETERS);
+        }
+
+        try 
+        {
+            $stmt = DB::pdo()->prepare("DELETE FROM users_displays WHERE display_id = :display_id AND user_id = :user_id");
+            $stmt->bindParam(":display_id", $display_id);
+            $stmt->bindParam(":user_id", $user_id);
+
+            $stmt->execute();
+        } 
+        catch (\Exception $e) 
+        {
+            throw $e;
+        }
+    }
+
     public function getOrganizationsAll($organization_id) 
     {
         try 
@@ -87,7 +128,7 @@ class Display
     {
         try 
         {
-            $stmt = DB::pdo()->prepare("SELECT displays.id FROM displays JOIN users_displays ON user_id = :user_id ");
+            $stmt = DB::pdo()->prepare("SELECT displays.id FROM displays JOIN users_displays ON users_displays.display_id = displays.id WHERE user_id =  :user_id");
             $stmt->bindParam(":user_id", $user_id);
             $stmt->execute();
 

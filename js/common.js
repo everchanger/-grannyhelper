@@ -53,6 +53,8 @@ $(document).ready(function() {
         if(!confirm('Är du säker på att du vill ta bort detta event?'))
             return false;
     });
+
+    $('.add_user_to_display').on('click', showAddUserDisplay);
 });
 
 function readURL(input) {
@@ -93,4 +95,37 @@ function overlay_on() {
 
 function overlay_off() {
     $('#overlay').fadeOut(200);
+}
+
+
+function showAddUserDisplay()
+{
+    var display_id = $(this).attr('data-display-id');
+
+    $('#modal-title').html('Add a user to display "' + $(this).attr('data-display-name') + '"');
+    $('#display_id').val(display_id);
+    
+    $('.user-option').each(function() {
+        $(this).show();
+        $(this).prop("selected", true);
+        if($(this).attr('data-display') === undefined) {
+            return;
+        }
+
+        var displays = $(this).attr('data-display').split(',');
+        
+        if(displays === undefined || displays.length <= 0) {
+            return;
+        }
+        
+        for(var i = 0; i < displays.length; ++i) {
+            if(displays[i] == display_id) {
+                $(this).hide();
+                $(this).prop("selected", false);
+                break;
+            }
+        }
+    });
+
+    $('#addUserDisplay').modal('show');
 }
