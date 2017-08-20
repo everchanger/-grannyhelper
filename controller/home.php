@@ -4,10 +4,26 @@ namespace controller;
 
 class home extends Base 
 {
-	
 	public function show() 
 	{	
-		respondWithView("home", array());
+		$user_id = $_SESSION['signed_in_user_id'];
+		
+		try {
+			$organization = new \model\Organization();
+			$userOrganization = $organization->memberOf($user_id);	
+
+			$display = new \model\Display();
+			$displays = array();
+			
+			if($userOrganization) {
+				$displays = $display->getUsersAll($user_id);
+			}
+		}	
+		catch(\Exception $e) {
+			$this->respondWithControllerError("organization", $e->getMessage());  
+		}
+
+		respondWithView("home", array("displays" => $displays, "inOrganization" => $userOrganization));
 	}
 
 	public function show_unauth() 
@@ -25,6 +41,7 @@ class home extends Base
 		$in_date  		= filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
 		$id  			= filter_input(INPUT_POST, 'event_id', FILTER_SANITIZE_STRING);
 		$photo_id  		= filter_input(INPUT_POST, 'photo_id', FILTER_SANITIZE_STRING);
+		$displays_id  	= $_POST['display_ids'];
 		$title  		= filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
 		$description  	= filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
 		$setAsAStandard	= filter_input(INPUT_POST, 'standard', FILTER_SANITIZE_STRING);
@@ -63,7 +80,14 @@ class home extends Base
 
 		try {
 			$event = new \model\Event();
-			$planned = $event->set($id, $date, $title, $description, $photo_id, $filename, $setAsAStandard);
+
+			if(count($displays_id) > 1) {
+				$id = 0;
+			}
+
+			foreach($displays_id as $display_id) {
+				$planned = $event->set($id, $date, $title, $description, $photo_id, $filename, $display_id, $setAsAStandard);
+			}
 		}
 		catch(\Exception $e) {
 			var_dump($e);die();
@@ -77,13 +101,14 @@ class home extends Base
 	public function getEvent()
 	{
 		$in_date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_STRING);
+		$display_id = filter_input(INPUT_GET, 'display_id', FILTER_SANITIZE_STRING);
 
 		// Format a correct date
 		$date = new \DateTime($in_date . ' 00:00');
 
 		try {
 			$event = new \model\Event();
-			$plannedEvents = $event->get($date);
+			$plannedEvents = $event->get($date, $display_id);
 		}
 		catch(\Exception $e) {
 			var_dump($e);die();
@@ -109,58 +134,6 @@ class home extends Base
 		$this->respondWithController("home", "show");
 	}
 
-	public function display()
-	{
-		$date = new \DateTime('today midnight');
-	
-		try {
-			$event = new \model\Event();
-			$plannedEvents = $event->get($date);
-			$currentEvent = $plannedEvents[0];
-			foreach($plannedEvents as $plannedEvent) {
-				if(!$plannedEvent->standard) {
-					$currentEvent = $plannedEvent;
-					break;
-				}
-			}
-
-			$event_hash = $this->hashObject($currentEvent);
-		}
-		catch(\Exception $e) {
-			var_dump($e);die();
-		}
-
-		respondWithView("display", array("date" => $date, "event" => $currentEvent, "day_period" => $this->getTimePeriod(), "event_hash" => $event_hash), 200, false);
-	}
-
-	public function needsRefresh()
-	{
-		$hash = filter_input(INPUT_GET, 'event_hash', FILTER_SANITIZE_STRING);
-
-		$date = new \DateTime('today midnight');
-	
-		try {
-			$event = new \model\Event();
-			$plannedEvents = $event->get($date);
-			$currentEvent = $plannedEvents[0];
-			foreach($plannedEvents as $plannedEvent) {
-				if(!$plannedEvent->standard) {
-					$currentEvent = $plannedEvent;
-					break;
-				}
-			}
-
-			$event_hash = $this->hashObject($currentEvent);
-		}
-		catch(\Exception $e) {
-			var_dump($e);die();
-		}
-
-		if($hash != $event_hash) {
-			echo 'TRUE';
-		}
-	}
-
 	private function rotateImageExif($filename)
 	{
 		$exif = exif_read_data($filename);
@@ -181,34 +154,10 @@ class home extends Base
 			} 
 		}
 
-		imagejpeg($image, $filename, 90);
+		@imagejpeg($image, $filename, 90);
 
-		imagedestroy($imageResource);
-		imagedestroy($image);
-	}
-
-	private function getTimePeriod()
-	{
-		$current_time = new \DateTime();
-		$period = "morgon";
-		$current_hour = intval($current_time->format('H'))+1;
-
-		if($current_hour >= 23 || ($current_hour >= 0 && $current_hour < 3)) {
-			$period = "natt";
-		} else if($current_hour >= 3 && $current_hour < 9) {
-			$period = "morgon";
-		} else if($current_hour >= 9 && $current_hour < 17) {
-			$period = "dag";
-		} else if($current_hour >= 17 && $current_hour < 23) {
-			$period = "kväll";
-		}
-
-		return $period;
-	}
-
-	private function hashObject($object) {
-		$text = $object->title . $object->description . $object->filename . $this->getTimePeriod();
-		return hash('md5', $text);
+		@imagedestroy($imageResource);
+		@imagedestroy($image);
 	}
 };
 

@@ -7,7 +7,10 @@ function needsUpdate()
     // Fetch events for this day!
     $.ajax({
         url: '?controller=home&action=needsRefresh',
-        data: {event_hash: $('#event_hash').val()},
+        data: {
+            event_hash: $('#event_hash').val(),
+            id: $('#display_id').val()
+        },
     })
     .done(function(response) {
         if(!response.length) {

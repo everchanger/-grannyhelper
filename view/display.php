@@ -18,6 +18,7 @@
         <div id="display-img-wrapper" style="background-image: url(<?=$event->filename?>)" class="display-wrapper text-center">
         </div>
         <input type="hidden" id="event_hash" value="<?=$event_hash?>" />
+        <input type="hidden" id="display_id" value="<?=$display_id?>" />
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script type="text/javascript" src="js/display_common.js"></script>

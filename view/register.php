@@ -15,7 +15,7 @@
                 <input type="password" required class="form-control" name="password2" placeholder="Confirm password" />
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-default" value="Register" />
+                <input type="submit" class="btn btn-primary" value="Register" />
             </div>
         </form>
     </div>

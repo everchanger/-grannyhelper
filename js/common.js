@@ -5,42 +5,7 @@ $(document).ready(function() {
         weekStart: 1,
         autoclose: true
     }).on('changeDate', function(ev){
-        var d = new Date(ev.date);
-        var day = $.fn.datetimepicker.dates['en'].days[d.getDay()];
-        
-        $('#standard').text('Använd som standard för alla ' + day.toLowerCase() + 'ar');
-
-        overlay_on();
-
-        // Fetch events for this day!
-        $.ajax({
-            url: '?controller=home&action=getEvent',
-            data: {date: $('#date').val()},
-            dataType: 'json'
-        })
-        .done(function(response) {
-            if(!response.length) {
-                setInputs();
-                $('#header').text('Inställningar');
-                overlay_off();
-                return;
-            }
-
-            var event = response[0];
-            if(response.length > 1) {
-                // This means we have a standard event and a special event.
-                for(var i = 0; i < response.length; i++) {
-                    if(!response[i].standard) {
-                        event = response[i];
-                        break;
-                    }
-                }
-            }
-
-            setInputs(event.id, event.title, event.description, event.photo_id, event.filename, !event.standard);
-        
-            overlay_off();
-        });
+        updateUI(ev.date)
     });
 
     $("#photo").change(function(){
@@ -55,7 +20,88 @@ $(document).ready(function() {
     });
 
     $('.add_user_to_display').on('click', showAddUserDisplay);
+
+    $('.selectpicker').on('change', function() {
+        var display_ids = $('#display').val(); 
+
+        if(display_ids.length == 1) {
+            $('#show_screen').show();
+            $('#show_screen').attr('href', '?controller=display&action=show&id='+display_ids[0])
+        } else {
+            $('#show_screen').hide();
+        } 
+        
+        var date = $('#date').val();
+        if(date == '') {
+            return;
+        }
+
+        updateUI(date);
+    });
+
+    $('.selectpicker').selectpicker({
+        noneSelectedText: 'No display selected'
+    });
+      
 });
+
+function updateUI(date) 
+{
+    var d = new Date(date);
+    var day = $.fn.datetimepicker.dates['en'].days[d.getDay()];
+    
+    $('#standard').text('Använd som standard för alla ' + day.toLowerCase() + 'ar');
+
+    var display_ids = $('#display').val(); 
+
+    if($('#display').val() == '') {
+        $('#display').focus();
+        return;
+    }
+
+    if(display_ids.length > 1) {
+        setInputs();
+        $('#header').text('Display settings');
+        return;
+    }
+
+    var display_id = display_ids[0];
+
+    overlay_on();
+
+    // Fetch events for this day!
+    $.ajax({
+        url: '?controller=home&action=getEvent',
+        data: {
+            date: $('#date').val(),
+            display_id: display_id
+        },
+        dataType: 'json'
+    })
+    .done(function(response) {
+        if(!response.length) {
+            setInputs();
+            $('#header').text('Display settings');
+            overlay_off();
+            return;
+        }
+
+        var event = response[0];
+        if(response.length > 1) {
+            // This means we have a standard event and a special event.
+            for(var i = 0; i < response.length; i++) {
+                if(!response[i].standard) {
+                    event = response[i];
+                    break;
+                }
+            }
+        }
+
+        setInputs(event.id, event.title, event.description, event.photo_id, event.filename, !event.standard);
+    
+        overlay_off();
+    });
+}
 
 function readURL(input) {
 
@@ -79,11 +125,11 @@ function setInputs(event_id = '', title = '', description = '', photo_id = '', p
     $('#photo-preview').attr('src', photoURL);
 
     if(enableDelete) {
-        $('#header').text('Inställningar - Särskild händelse');
+        $('#header').text('Display settings - Special event');
         $('#delete').attr('href', '?controller=home&action=deleteEvent&event_id='+event_id);
         $('#delete').show();
     } else {
-        $('#header').text('Inställningar - Standard händelse');
+        $('#header').text('Display settings - Standard event');
         $('#delete').attr('href', '');
         $('#delete').hide();
     }

@@ -1,4 +1,4 @@
-<div class="col-xs-12 col-sm-offset-4 col-sm-5">
+<div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
 	<div class="col-xs-12 content-header">
 		<?php if($userOrganization == null): ?>
 			<h3 id="header">Organization</h3>
@@ -53,14 +53,14 @@
 				continue;
 			} ?>		
 			<div class="col-xs-12 display-item">
-				<div class="col-xs-12 col-sm-4">
+				<div class="col-xs-12 col-sm-4 paragraf-wrapper">
 					<p class="display-paragraf"><?=$member->email?></p>
 				</div>
 				<div class="col-xs-12 col-sm-8">
 					<?php if(isset($member->isAdmin)): ?>
-						<a href="?controller=organization&action=removeAdmin&user_id=<?=$member->id?>&organization_id=<?=$userOrganization->id?>" class="btn btn-danger">Remove administrator</a>
+						<a href="?controller=organization&action=removeAdmin&user_id=<?=$member->id?>&organization_id=<?=$userOrganization->id?>" class="btn btn-danger pull-right-large">Remove administrator</a>
 					<?php else: ?>
-						<a href="?controller=organization&action=addAdmin&user_id=<?=$member->id?>&organization_id=<?=$userOrganization->id?>" class="btn btn-primary">Make administrator</a>
+						<a href="?controller=organization&action=addAdmin&user_id=<?=$member->id?>&organization_id=<?=$userOrganization->id?>" class="btn btn-primary pull-right-large">Make administrator</a>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -92,7 +92,7 @@
 		<?php foreach($displays as $display): ?>
 		<div class="col-xs-12 display-wrapper">
 			<div class="col-xs-12 display-item-header">
-				<p><?=$display->name?></p>
+				<a href="?controller=display&action=show&id=<?=$display->id?>"><?=$display->name?></a>
 			</div>
 			<!-- list people who have access to this display here -->
 			<?php if(count($members) <= 0): ?>
@@ -104,11 +104,11 @@
 					foreach($member->displays as $memberDisplay) {
 						if($memberDisplay->id == $display->id) {
 							echo '<div class="col-xs-12 display-item">';
-							echo '<div class="col-xs-12 col-sm-4">';
+							echo '<div class="col-xs-12 col-sm-4 paragraf-wrapper">';
 							echo '<p class="display-paragraf">'.$member->email.'</p>';
 							echo '</div>';
 							echo '<div class="col-xs-12 col-sm-8">';
-							echo '<a href="?controller=display&action=removeUser&user_id='.$member->id.'&display_id='.$display->id.'" class="btn btn-danger">Remove access</a>';
+							echo '<a href="?controller=display&action=removeUser&user_id='.$member->id.'&display_id='.$display->id.'" class="btn btn-danger pull-right-large">Remove access</a>';
 							echo '</div>';
 							echo '</div>';
 							$count++;

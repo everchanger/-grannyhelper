@@ -7,10 +7,12 @@
 		<!-- CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
 		<nav class="navbar navbar-default no-margin-bottom" id='main_navbar'>
 		  <div class="container-fluid">
@@ -30,9 +32,6 @@
 			  <ul class="nav navbar-nav">
 			  	<?php if(isAuthenticated()): ?>
 				<li>
-				  	<a href="?controller=home&action=display">Show screen</a>
-				</li>
-				<li>
 				  	<a href="?controller=organization&action=show">Organization</a>
 				</li>
 				<?php else: ?>
@@ -44,6 +43,9 @@
 
 			  <ul class="nav navbar-nav navbar-right">
 			  	<?php if(isAuthenticated()): ?>
+				  <li>
+				  	<a href="#">Signed in as <?=$_SESSION['signed_in_user_email']?></a>
+				</li>
 				<li>
 				  	<a href="?controller=user&action=logout">Logout</a>
 				</li>

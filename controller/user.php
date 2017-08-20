@@ -12,12 +12,12 @@ class User extends Base
         
         if(!strlen($email)) 
         {
-            $this->respondWithViewError("register", "Please enter a valid email address");
+            $this->respondWithControllerError("register", "Please enter a valid email address");
         }
 
         if((!strlen($password1) || !strlen($password2)) || $password1 != $password2) 
         {
-            $this->respondWithViewError("register", "Passwords didn't match, please make sure you written the same password in both the password fields.");
+            $this->respondWithControllerError("register", "Passwords didn't match, please make sure you written the same password in both the password fields.");
         }
 
         $password_hash = hash_password($password1);
@@ -37,7 +37,7 @@ class User extends Base
                 default:
                 break;
             }
-            $this->respondWithViewError("register", $errorMsg);            
+            $this->respondWithControllerError("register", $errorMsg);            
         }
 
         $_SESSION['signed_in_user_id'] = intval($user_id);
@@ -54,7 +54,7 @@ class User extends Base
         $password  	= filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
 		if(!strlen($email) || !strlen($password)) {
-            $this->respondWithViewError("unauth_home", "Please enter a valid email address and a password");
+            $this->respondWithControllerError("unauth_home", "Please enter a valid email address and a password");
         }
 
 		$user = new \model\user();
@@ -64,7 +64,7 @@ class User extends Base
 			$current_user = $user->get($email);
 			$match = validate_password($current_user->password_hash, $password);
             if(!$match) {
-                $this->respondWithViewError("unauth_home", "Wrong password");
+                $this->respondWithControllerError("unauth_home", "Wrong password");
             }
 
             $_SESSION['signed_in_user_id'] = intval($current_user->id);
@@ -83,7 +83,7 @@ class User extends Base
                 break;
             }
 
-            $this->respondWithViewError("unauth_home", $errorMsg);
+            $this->respondWithControllerError("unauth_home", $errorMsg);
 		}
 
         $this->userMessage("Welcome back ".$email, USER_MESSAGE_SUCCESS);

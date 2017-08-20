@@ -128,7 +128,7 @@ class Display
     {
         try 
         {
-            $stmt = DB::pdo()->prepare("SELECT displays.id FROM displays JOIN users_displays ON users_displays.display_id = displays.id WHERE user_id =  :user_id");
+            $stmt = DB::pdo()->prepare("SELECT displays.id, displays.name FROM displays JOIN users_displays ON users_displays.display_id = displays.id WHERE user_id =  :user_id");
             $stmt->bindParam(":user_id", $user_id);
             $stmt->execute();
 
